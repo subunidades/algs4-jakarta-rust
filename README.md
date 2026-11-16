@@ -120,6 +120,43 @@ for (int x : minPQ) System.out.print(x + " ");
 var maxPQ = ALGS4Middleware.Middleware.<Integer>priorityQueue(2, Comparator.reverseOrder());
 ```
 
+## Status
+
+Tested and working (in GitHub Codespaces):
+- Java library demo: `java -cp out com.example.Main`
+- Rust service: `cargo run`, then `curl http://localhost:8081/add/7/5` returns `12`
+- Rust sort: `POST /sort` returns the sorted array
+- Java calling Rust through `Middleware`: `java -cp out com.example.Main rust`
+
+Not tested yet:
+- `mvn package` and deploying the WAR to a Jakarta EE 10 server (Payara 6, WildFly 27+, TomEE 10)
+- The `/api/compute` and `/api/algorithms/*` REST endpoints (they need that server running)
+
+## Running in GitHub Codespaces (works from an iPad in Safari)
+
+1. Repo page: **Code -> Codespaces -> Create codespace on main**.
+2. Java is preinstalled. Rust may not be; if `cargo: command not found`, install it:
+   ```bash
+   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+   source $HOME/.cargo/env
+   ```
+3. Terminal 1: `cargo run` (the first build takes a minute or two; leave it running).
+4. Terminal 2 (the **+** button): run the `curl` and `java` commands above.
+5. If Codespaces asks to forward a port, forward **8081**. You only need this to open the service in a browser; the terminal tests don't need it.
+
+## Changes from the original two repos
+
+- `ALGS4Middleware.java`, `Main.java`: added `package com.example;`.
+- `ALGS4Middleware.java`: fixed `partition` (it used the 1-based heap `exch` with 0-based indices, which crashed QuickSort and QuickSelect) by adding a 0-based `swap`.
+- `ALGS4Middleware.java`: fixed `heapSort` sorting opposite to the comparator (the heap sink was a min-heap).
+- `ALGS4Middleware.java`: added `Engine { JAVA, RUST }` and the overloads `sort(Integer[], SortType, boolean, Engine)` and `select(Integer[], int, Engine)`. Existing methods are unchanged.
+- `Main.java`: `minPQ(2)` is now `<Integer>minPQ(2)` (the original did not compile because `var` could not infer the type); added an optional `rust` argument.
+- `main.rs`: kept `/add`, added `POST /sort` and `POST /select`.
+- `Cargo.toml`: added a `[[bin]]` entry so the binary is the root `main.rs`.
+- `pom.xml`: compiles from the repo root and writes to `mvn-target/` so it does not collide with Cargo's `target/`.
+- New files: `RustBackend.java`, `AlgorithmsResource.java`, `RestApplication.java`, `.gitignore`.
+- Commit `Cargo.lock`; it pins the Rust dependency versions.
+
 ## Notes
 
 - Rust runs separately as a service; no WASM inside the JVM.
