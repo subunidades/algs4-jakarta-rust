@@ -50,6 +50,14 @@ mvn package
 Deploy `mvn-target/jakarta-rust-integration.war` to Payara, WildFly, or TomEE.
 (Maven writes to `mvn-target/` so it doesn't collide with Cargo's `target/`.)
 
+Quickest way to run it: Payara Micro (a single jar, Jakarta EE 10). Keep the Rust service running, then in a new terminal:
+```bash
+mvn package && curl -L -o payara-micro.jar https://repo1.maven.org/maven2/fish/payara/extras/payara-micro/6.2025.11/payara-micro-6.2025.11.jar && java -jar payara-micro.jar --deploy mvn-target/jakarta-rust-integration.war
+```
+This builds the WAR, downloads Payara Micro, and starts it on port 8080. The terminal stays busy while the server runs (about 30 seconds until it says the application is deployed). Then test from another terminal with the `curl` commands under "Endpoints" below.
+
+Port 8080 is only available while this server is running. If you "can't reach 8080", it has not been started.
+
 ### Endpoints
 ```bash
 # Calls the Rust service
@@ -143,6 +151,7 @@ Not tested yet:
 3. Terminal 1: `cargo run` (the first build takes a minute or two; leave it running).
 4. Terminal 2 (the **+** button): run the `curl` and `java` commands above.
 5. If Codespaces asks to forward a port, forward **8081**. You only need this to open the service in a browser; the terminal tests don't need it.
+6. For the Jakarta endpoints on port 8080, start Payara Micro with the command in "Jakarta backend" above (third terminal tab), then forward **8080** if asked.
 
 ## Changes from the original two repos
 
