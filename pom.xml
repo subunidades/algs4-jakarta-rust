@@ -26,6 +26,7 @@
   <build>
     <sourceDirectory>.</sourceDirectory>
     <directory>mvn-target</directory>
+    <finalName>jakarta-rust-integration</finalName>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
