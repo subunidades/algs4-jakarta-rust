@@ -4,22 +4,7 @@ Sorting, selection and priority queues (ALGS4 style) in Java, a Rust microservic
 that does the same sorting and selection over HTTP, and a Jakarta EE REST layer
 that can use either one.
 
-...(Files, Build & Run, Usage, Status, as before)...
-
-## Planned extension: CRUD API
-
-The next step is to extend this into a full CRUD API:
-
-- **Persistence:** Jakarta Persistence (JPA) stores entities such as items with
-  names, prices and timestamps.
-- **Endpoints:** create, read, update and delete, with proper status codes and
-  validation.
-- **Sorting and pagination:** handled by the database through indexed queries.
-- **Algorithm features:** the existing library supplies computed results on top
-  of the stored data, such as percentile statistics through quickselect and
-  top-k rankings through the priority queue.
-- **Rust service:** stays a separate component reserved for heavy compute, while
-  the Jakarta backend handles business logic, persistence and orchestration.
+## How it fits together
 
 ```
 Client -> Jakarta (port 8080) -> Middleware -+-> Java (in-process)
@@ -74,7 +59,7 @@ In a terminal:
 cargo run
 ```
 
-The first build takes a few minutes. When it prints `Running target/debug/rust_service`, leave it running.
+The first build takes a few minutes. When it prints ``Running `target/debug/rust_service` ``, leave it running.
 
 ## Step 3: Test the Rust service
 
@@ -145,10 +130,14 @@ curl "http://localhost:8080/jakarta-rust-integration/api/algorithms/select?value
 
 Parameters for `/api/algorithms/sort`: `values` (comma-separated integers), `algo` = `quick` | `merge` | `heap`, `order` = `asc` | `desc`, `engine` = `java` | `rust`.
 
+## Status
+
+All five steps above have been run and tested in GitHub Codespaces. In Codespaces, if a port-forwarding prompt appears, forward 8080 or 8081; this is only needed to open the services in a browser, since the `curl` tests run in the terminal.
+
 ## Troubleshooting
 
 - **Cannot reach port 8080:** the Jakarta app is not running. Do Step 4 and wait for the deployed message.
-- **`Error: Connection refused` from an endpoint using Rust:** the Rust service is not running. Do Step 2.
+- **Rust service not running:** `/api/compute` and `/api/algorithms/*` with `engine=rust` return an error (500 or 502). Do Step 2.
 - **`cargo: command not found`:** install Rust (see Requirements), then `source $HOME/.cargo/env`.
 - **404 from `curl` in Step 4 (download):** check the current Payara Micro 6 version at https://payara.fish/downloads/payara-platform-community-edition and change the version in the command.
 - **Different Rust URL:** set the `RUST_SERVICE_URL` environment variable (default `http://localhost:8081`). `ComputeResource` has the URL hard-coded.
@@ -178,6 +167,21 @@ for (int x : minPQ) System.out.print(x + " ");
 ```
 
 The Rust engine works on `Integer` values in natural order (ascending or descending). `select` shuffles the array you pass in, so copy it first if the order matters.
+
+## Planned extension: CRUD API
+
+The next step is to extend this into a full CRUD API:
+
+- **Persistence:** Jakarta Persistence (JPA) stores entities such as items with
+  names, prices and timestamps.
+- **Endpoints:** create, read, update and delete, with proper status codes and
+  validation.
+- **Sorting and pagination:** handled by the database through indexed queries.
+- **Algorithm features:** the existing library supplies computed results on top
+  of the stored data, such as percentile statistics through quickselect and
+  top-k rankings through the priority queue.
+- **Rust service:** stays a separate component reserved for heavy compute, while
+  the Jakarta backend handles business logic, persistence and orchestration.
 
 ## License
 
