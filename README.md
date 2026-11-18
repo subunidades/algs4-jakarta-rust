@@ -137,7 +137,7 @@ All five steps above have been run and tested in GitHub Codespaces. In Codespace
 ## Troubleshooting
 
 - **Cannot reach port 8080:** the Jakarta app is not running. Do Step 4 and wait for the deployed message.
-- **Rust service not running:** `/api/compute` and `/api/algorithms/*` with `engine=rust` return an error (500 or 502). Do Step 2.
+- **Rust service not running:** `/api/compute` returns HTTP 500 with `Error: null`, and `/api/algorithms/*` with `engine=rust` returns HTTP 502 with `Error: Cannot reach Rust service at http://localhost:8081: null`. The `null` is normal here; it only means the connection failed. Do Step 2.
 - **`cargo: command not found`:** install Rust (see Requirements), then `source $HOME/.cargo/env`.
 - **404 from `curl` in Step 4 (download):** check the current Payara Micro 6 version at https://payara.fish/downloads/payara-platform-community-edition and change the version in the command.
 - **Different Rust URL:** set the `RUST_SERVICE_URL` environment variable (default `http://localhost:8081`). `ComputeResource` has the URL hard-coded.
