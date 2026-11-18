@@ -4,6 +4,7 @@ Sorting, selection and priority queues (ALGS4 style) in Java, a Rust microservic
 
 The project already combines ALGS4-style sorting, selection, and priority queues in a Java middleware library, a Jakarta REST layer that exposes them over HTTP, and an optional Rust microservice that can run the same algorithms as an alternative engine. The natural next step is to extend this into a full CRUD API. A persistence layer built on Jakarta Persistence (JPA) would store entities such as items with names, prices, and timestamps, and standard create, read, update, and delete endpoints would manage them with proper status codes and validation. Sorting and pagination would be handled by the database through indexed queries, while the existing algorithm library would supply features computed on top of the stored data, such as percentile statistics through quickselect and top-k rankings through the priority queue. The Rust service would stay a separate component reserved for heavy compute, keeping the Jakarta backend responsible for business logic, persistence, and orchestration.
 
+
 ```
 Client -> Jakarta (port 8080) -> Middleware -+-> Java (in-process)
                                              +-> Rust service (port 8081)
